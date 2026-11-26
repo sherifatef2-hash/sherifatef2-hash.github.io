@@ -1,3 +1,4 @@
+جديد
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
@@ -62,6 +63,12 @@
             transform: translateY(-3px);
             box-shadow: 0 10px 20px -5px rgba(185, 28, 28, 0.15);
         }
+        .menu-card img.item-thumb {
+            transition: transform 0.3s ease;
+        }
+        .menu-card:hover img.item-thumb {
+            transform: scale(1.04);
+        }
     </style>
 </head>
 <body class="min-h-screen flex flex-col bg-babaCream text-stone-900">
@@ -86,7 +93,7 @@
                     </div>
                 </div>
 
-                <!-- أزرار التبديل والسلة (متراصة بنظام مرن لا ينضغط على شاشات 375px) -->
+                <!-- أزرار التبديل والسلة -->
                 <div class="flex items-center gap-1.5 sm:gap-2.5 mr-auto sm:mr-0">
                     <button id="nav-menu-btn" onclick="switchView('menu')" class="px-2.5 sm:px-4 py-2 rounded-xl text-xs sm:text-sm font-extrabold bg-white text-babaRed-800 shadow transition flex items-center gap-1.5">
                         <i class="fa-solid fa-utensils"></i>
@@ -285,6 +292,10 @@
                 <div>
                     <label class="block text-xs font-extrabold text-stone-700 mb-1">وصف المكونات</label>
                     <input type="text" id="new-item-desc" placeholder="مكونات الصنف..." class="w-full bg-stone-50 border border-stone-300 rounded-xl px-3.5 py-2.5 text-sm outline-none">
+                </div>
+                <div>
+                    <label class="block text-xs font-extrabold text-stone-700 mb-1">رابط صورة الصنف (اختياري)</label>
+                    <input type="url" id="new-item-image" placeholder="https://..." class="w-full bg-stone-50 border border-stone-300 rounded-xl px-3.5 py-2.5 text-sm outline-none" dir="ltr">
                 </div>
                 <div class="bg-amber-50 p-3.5 rounded-xl border border-amber-200 space-y-3">
                     <div class="flex items-center gap-4 text-xs font-extrabold">
@@ -505,7 +516,7 @@
     </footer>
 
     <!-- ===================================================================== -->
-    <!-- كود الجافاسكريبت الكامل والمنظم                                       -->
+    <!-- كود الجافاسكريبت الكامل والمنظم مع الصور المتوافقة لكل صنف          -->
     <!-- ===================================================================== -->
     <script>
         // 1. الإعدادات الافتراضية للمطعم
@@ -516,6 +527,54 @@
             address: "13 شارع محمد دري - ناصية كاربت سيتي متفرع من طريق الحرية - أمام شارع شعراوي - لوران، الإسكندرية"
         };
 
+        // مكتبة صور متخصصة حسب نوع الصنف والمكونات
+        const ITEM_PHOTOS = {
+            veggiePie: "https://images.unsplash.com/photo-1574071318508-1cdbab80d002?auto=format&fit=crop&w=600&q=80",
+            sausagePie: "https://images.unsplash.com/photo-1593560708920-61dd98c46a4f?auto=format&fit=crop&w=600&q=80",
+            meatPie: "https://images.unsplash.com/photo-1513104890138-7c749659a591?auto=format&fit=crop&w=600&q=80",
+            cheesePie: "https://images.unsplash.com/photo-1548365328-8c6db3220e4c?auto=format&fit=crop&w=600&q=80",
+            chickenPie: "https://images.unsplash.com/photo-1604382355076-af4b0eb60143?auto=format&fit=crop&w=600&q=80",
+            tunaPie: "https://images.unsplash.com/photo-1590947132387-155cc02f3212?auto=format&fit=crop&w=600&q=80",
+            shrimpPie: "https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?auto=format&fit=crop&w=600&q=80",
+
+            pizzaMargherita: "https://images.unsplash.com/photo-1574071318508-1cdbab80d002?auto=format&fit=crop&w=600&q=80",
+            pizzaPepperoni: "https://images.unsplash.com/photo-1628840042765-356cda07504e?auto=format&fit=crop&w=600&q=80",
+            pizzaCheese: "https://images.unsplash.com/photo-1513104890138-7c749659a591?auto=format&fit=crop&w=600&q=80",
+            pizzaChicken: "https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?auto=format&fit=crop&w=600&q=80",
+            pizzaSeafood: "https://images.unsplash.com/photo-1604382354936-07c5d9983bd3?auto=format&fit=crop&w=600&q=80",
+
+            pastaRed: "https://images.unsplash.com/photo-1621996346565-e3dbc646d9a9?auto=format&fit=crop&w=600&q=80",
+            pastaWhite: "https://images.unsplash.com/photo-1645112411341-6c4fd023714a?auto=format&fit=crop&w=600&q=80",
+            pastaBaked: "https://images.unsplash.com/photo-1551183053-bf91a1d81141?auto=format&fit=crop&w=600&q=80",
+
+            sweetPlain: "https://images.unsplash.com/photo-1509440159596-0249088772ff?auto=format&fit=crop&w=600&q=80",
+            sweetHoney: "https://images.unsplash.com/photo-1551024601-bec78aea704b?auto=format&fit=crop&w=600&q=80",
+            sweetChocolate: "https://images.unsplash.com/photo-1578985545062-69928b1d9587?auto=format&fit=crop&w=600&q=80",
+            sweetNuts: "https://images.unsplash.com/photo-1563729784474-d77dbb933a9e?auto=format&fit=crop&w=600&q=80",
+
+            crepeSavory: "https://images.unsplash.com/photo-1519676867240-f03562e64548?auto=format&fit=crop&w=600&q=80",
+            crepeChicken: "https://images.unsplash.com/photo-1562967914-608f82629710?auto=format&fit=crop&w=600&q=80",
+            crepeSweet: "https://images.unsplash.com/photo-1567620905732-2d1ec7ab7445?auto=format&fit=crop&w=600&q=80",
+
+            burgerSand: "https://images.unsplash.com/photo-1568901346375-23c9450c58cd?auto=format&fit=crop&w=600&q=80",
+            grillSand: "https://images.unsplash.com/photo-1529006557810-274b9b2fc783?auto=format&fit=crop&w=600&q=80",
+            chickenSand: "https://images.unsplash.com/photo-1606755962773-d324e0a13086?auto=format&fit=crop&w=600&q=80",
+            friesSand: "https://images.unsplash.com/photo-1573080496219-bb080dd4f877?auto=format&fit=crop&w=600&q=80",
+            shrimpSand: "https://images.unsplash.com/photo-1559742811-822873691df8?auto=format&fit=crop&w=600&q=80",
+
+            witchPie: "https://images.unsplash.com/photo-1509722747041-616f39b57569?auto=format&fit=crop&w=600&q=80",
+            meshaltetPie: "https://images.unsplash.com/photo-1586444248902-2f64eddc13df?auto=format&fit=crop&w=600&q=80",
+
+            broastedMeal: "https://images.unsplash.com/photo-1626645738196-c2a7c87a8f58?auto=format&fit=crop&w=600&q=80",
+            stripsMeal: "https://images.unsplash.com/photo-1562967914-608f82629710?auto=format&fit=crop&w=600&q=80",
+            rizzoMeal: "https://images.unsplash.com/photo-1603133872878-684f208fb84b?auto=format&fit=crop&w=600&q=80",
+            wingsMeal: "https://images.unsplash.com/photo-1527477396668-e93079184e41?auto=format&fit=crop&w=600&q=80",
+            friesSide: "https://images.unsplash.com/photo-1573080496219-bb080dd4f877?auto=format&fit=crop&w=600&q=80",
+            saladSide: "https://images.unsplash.com/photo-1512621776951-a57141f2eefd?auto=format&fit=crop&w=600&q=80",
+            drinksSide: "https://images.unsplash.com/photo-1544145945-f90425340c7e?auto=format&fit=crop&w=600&q=80",
+            sauceAddon: "https://images.unsplash.com/photo-1472476474098-e6e7280d669d?auto=format&fit=crop&w=600&q=80"
+        };
+
         // 2. الأقسام الثمانية للمنيو
         const MENU_CATEGORIES = [
             {
@@ -523,7 +582,7 @@
                 name: "فطير حادق",
                 icon: "fa-pizza-slice",
                 badge: "بالسمنة البلدي",
-                image: "https://images.unsplash.com/photo-1513104890138-7c749659a591?auto=format&fit=crop&w=800&q=80",
+                image: ITEM_PHOTOS.meatPie,
                 note: "أحجام وسط وكبير - محضر بالسمنة البلدي"
             },
             {
@@ -531,7 +590,7 @@
                 name: "البيتزا",
                 icon: "fa-pizza-slice",
                 badge: "موزاريلا طبيعي",
-                image: "https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?auto=format&fit=crop&w=800&q=80",
+                image: ITEM_PHOTOS.pizzaPepperoni,
                 note: "متوفر ستافت كراست (حشو الأطراف) بـ 60 ج"
             },
             {
@@ -539,7 +598,7 @@
                 name: "مكرونات",
                 icon: "fa-bowl-food",
                 badge: "طواجن فرن",
-                image: "https://images.unsplash.com/photo-1621996346565-e3dbc646d9a9?auto=format&fit=crop&w=800&q=80",
+                image: ITEM_PHOTOS.pastaBaked,
                 note: "أحجام صغير ووسط"
             },
             {
@@ -547,7 +606,7 @@
                 name: "فطير حلو",
                 icon: "fa-cake-candles",
                 badge: "حلويات شرقية",
-                image: "https://images.unsplash.com/photo-1551024601-bec78aea704b?auto=format&fit=crop&w=800&q=80",
+                image: ITEM_PHOTOS.sweetHoney,
                 note: "يمكن طلب إضافات العسل والقشطة والمكسرات والشيكولاتة"
             },
             {
@@ -555,7 +614,7 @@
                 name: "كريب حادق وحلو",
                 icon: "fa-stroopwafel",
                 badge: "كريب بابا علي",
-                image: "https://images.unsplash.com/photo-1519676867240-f03562e64548?auto=format&fit=crop&w=800&q=80",
+                image: ITEM_PHOTOS.crepeSavory,
                 note: "تشكيلة متنوعة من الكريب الحادق والحلو"
             },
             {
@@ -563,7 +622,7 @@
                 name: "سندوتشات",
                 icon: "fa-burger",
                 badge: "سوري / بيتي بان",
-                image: "https://images.unsplash.com/photo-1568901346375-23c9450c58cd?auto=format&fit=crop&w=800&q=80",
+                image: ITEM_PHOTOS.burgerSand,
                 note: "اختر بين العيش السوري أو البيتي بان"
             },
             {
@@ -571,7 +630,7 @@
                 name: "فطير ويتش والمشلتت",
                 icon: "fa-bread-slice",
                 badge: "فطير مشلتت بلدي",
-                image: "https://images.unsplash.com/photo-1509722747041-616f39b57569?auto=format&fit=crop&w=800&q=80",
+                image: ITEM_PHOTOS.meshaltetPie,
                 note: "فطير ويتش المميز والفطير المشلتت بالسمن البلدي"
             },
             {
@@ -579,885 +638,34 @@
                 name: "بروستد ومقبلات وإضافات",
                 icon: "fa-drumstick-bite",
                 badge: "المنيو الأحمر",
-                image: "https://images.unsplash.com/photo-1626645738196-c2a7c87a8f58?auto=format&fit=crop&w=800&q=80",
+                image: ITEM_PHOTOS.broastedMeal,
                 note: "وجبات البروستد والاستربس والمقبلات وكافة الإضافات"
             }
         ];
 
-        // 3. جميع الأصناف والأسعار الدقيقة من المنيو بدون أي تغيير في الأسعار
+        // 3. جميع الأصناف والأسعار الدقيقة من المنيو + صورة مناسبة لكل صنف
         const INITIAL_MENU_ITEMS = [
             // --- القسم 1: فطير حادق ---
-            { id: "sf_1", category: "cat-savory-feteer", name: "خضروات", desc: "فطير حادق بالخضروات الطازجة والموزاريلا", prices: [{ label: "وسط", price: 105 }, { label: "كبير", price: 120 }], available: true },
-            { id: "sf_2", category: "cat-savory-feteer", name: "سجق", desc: "فطير حادق بالسجق  المتبل", prices: [{ label: "وسط", price: 140 }, { label: "كبير", price: 215 }], available: true },
-            { id: "sf_3", category: "cat-savory-feteer", name: "لحم مفروم", desc: " فطير حادق باللحم المفروم ", prices: [{ label: "وسط", price: 140 }, { label: "كبير", price: 215 }], available: true },
-            { id: "sf_4", category: "cat-savory-feteer", name: "بسطرمة", desc: "فطير حادق بالبسطرمة ", prices: [{ label: "وسط", price: 155 }, { label: "كبير", price: 235 }], available: true },
-            { id: "sf_5", category: "cat-savory-feteer", name: "مشكل لحوم", desc: "سجق - بسطرمة - لحم مفروم", prices: [{ label: "وسط", price: 190 }, { label: "كبير", price: 255 }], available: true },
-            { id: "sf_6", category: "cat-savory-feteer", name: "رومي", desc: "فطير حادق بالجبنة الرومي", prices: [{ label: "وسط", price: 115 }, { label: "كبير", price: 180 }], available: true },
-            { id: "sf_7", category: "cat-savory-feteer", name: "كيري", desc: "فطير حادق بالجبنة الكيري", prices: [{ label: "وسط", price: 135 }, { label: "كبير", price: 205 }], available: true },
-            { id: "sf_8", category: "cat-savory-feteer", name: "مشكل جبن", desc: "موتزاريلا - رومي - كيري - لافاشكيري - شيدر", prices: [{ label: "وسط", price: 155 }, { label: "كبير", price: 235 }], available: true },
-            { id: "sf_9", category: "cat-savory-feteer", name: "سوسيس", desc: "فطير حادق بالسوسيس والجبن", prices: [{ label: "وسط", price: 115 }, { label: "كبير", price: 180 }], available: true },
-            { id: "sf_10", category: "cat-savory-feteer", name: "سلامي", desc: "فطير حادق بالسلامي المدخن", prices: [{ label: "وسط", price: 140 }, { label: "كبير", price: 215 }], available: true },
-            { id: "sf_11", category: "cat-savory-feteer", name: "سوبر سوبريم", desc: "سلامي - بيف - مشروم", prices: [{ label: "وسط", price: 155 }, { label: "كبير", price: 235 }], available: true },
-            { id: "sf_12", category: "cat-savory-feteer", name: "دجاج", desc: "فطير حادق بقطع الدجاج المتبلة", prices: [{ label: "وسط", price: 155 }, { label: "كبير", price: 235 }], available: true },
-            { id: "sf_13", category: "cat-savory-feteer", name: "دجاج كرسبي", desc: "فطير حادق بقطع الدجاج الكرسبي", prices: [{ label: "وسط", price: 155 }, { label: "كبير", price: 235 }], available: true },
-            { id: "sf_14", category: "cat-savory-feteer", name: "مشكل دجاج", desc: "شرائح بانيه - شيش - شاورما", prices: [{ label: "كبير", price: 175 }], available: true },
-            { id: "sf_15", category: "cat-savory-feteer", name: "تونة", desc: "فطير حادق بالتونة والخضروات", prices: [{ label: "كبير", price: 190 }], available: true },
-            { id: "sf_16", category: "cat-savory-feteer", name: "جمبري", desc: "فطير حادق بالجمبري والموزاريلا", prices: [{ label: "وسط", price: 255 }, { label: "كبير", price: 370 }], available: true },
+            { id: "sf_1", category: "cat-savory-feteer", name: "خضروات", desc: "فطير حادق بالخضروات الطازجة والموزاريلا", image: ITEM_PHOTOS.veggiePie, prices: [{ label: "وسط", price: 105 }, { label: "كبير", price: 120 }], available: true },
+            { id: "sf_2", category: "cat-savory-feteer", name: "سجق", desc: "فطير حادق بالسجق المتبل", image: ITEM_PHOTOS.sausagePie, prices: [{ label: "وسط", price: 140 }, { label: "كبير", price: 215 }], available: true },
+            { id: "sf_3", category: "cat-savory-feteer", name: "لحم مفروم", desc: "فطير حادق باللحم المفروم", image: ITEM_PHOTOS.meatPie, prices: [{ label: "وسط", price: 140 }, { label: "كبير", price: 215 }], available: true },
+            { id: "sf_4", category: "cat-savory-feteer", name: "بسطرمة", desc: "فطير حادق بالبسطرمة", image: ITEM_PHOTOS.meatPie, prices: [{ label: "وسط", price: 155 }, { label: "كبير", price: 235 }], available: true },
+            { id: "sf_5", category: "cat-savory-feteer", name: "مشكل لحوم", desc: "سجق - بسطرمة - لحم مفروم", image: ITEM_PHOTOS.sausagePie, prices: [{ label: "وسط", price: 190 }, { label: "كبير", price: 255 }], available: true },
+            { id: "sf_6", category: "cat-savory-feteer", name: "رومي", desc: "فطير حادق بالجبنة الرومي", image: ITEM_PHOTOS.cheesePie, prices: [{ label: "وسط", price: 115 }, { label: "كبير", price: 180 }], available: true },
+            { id: "sf_7", category: "cat-savory-feteer", name: "كيري", desc: "فطير حادق بالجبنة الكيري", image: ITEM_PHOTOS.cheesePie, prices: [{ label: "وسط", price: 135 }, { label: "كبير", price: 205 }], available: true },
+            { id: "sf_8", category: "cat-savory-feteer", name: "مشكل جبن", desc: "موتزاريلا - رومي - كيري - لافاشكيري - شيدر", image: ITEM_PHOTOS.cheesePie, prices: [{ label: "وسط", price: 155 }, { label: "كبير", price: 235 }], available: true },
+            { id: "sf_9", category: "cat-savory-feteer", name: "سوسيس", desc: "فطير حادق بالسوسيس والجبن", image: ITEM_PHOTOS.sausagePie, prices: [{ label: "وسط", price: 115 }, { label: "كبير", price: 180 }], available: true },
+            { id: "sf_10", category: "cat-savory-feteer", name: "سلامي", desc: "فطير حادق بالسلامي المدخن", image: ITEM_PHOTOS.meatPie, prices: [{ label: "وسط", price: 140 }, { label: "كبير", price: 215 }], available: true },
+            { id: "sf_11", category: "cat-savory-feteer", name: "سوبر سوبريم", desc: "سلامي - بيف - مشروم", image: ITEM_PHOTOS.meatPie, prices: [{ label: "وسط", price: 155 }, { label: "كبير", price: 235 }], available: true },
+            { id: "sf_12", category: "cat-savory-feteer", name: "دجاج", desc: "فطير حادق بقطع الدجاج المتبلة", image: ITEM_PHOTOS.chickenPie, prices: [{ label: "وسط", price: 155 }, { label: "كبير", price: 235 }], available: true },
+            { id: "sf_13", category: "cat-savory-feteer", name: "دجاج كرسبي", desc: "فطير حادق بقطع الدجاج الكرسبي", image: ITEM_PHOTOS.chickenPie, prices: [{ label: "وسط", price: 155 }, { label: "كبير", price: 235 }], available: true },
+            { id: "sf_14", category: "cat-savory-feteer", name: "مشكل دجاج", desc: "شرائح بانيه - شيش - شاورما", image: ITEM_PHOTOS.chickenPie, prices: [{ label: "كبير", price: 175 }], available: true },
+            { id: "sf_15", category: "cat-savory-feteer", name: "تونة", desc: "فطير حادق بالتونة والخضروات", image: ITEM_PHOTOS.tunaPie, prices: [{ label: "كبير", price: 190 }], available: true },
+            { id: "sf_16", category: "cat-savory-feteer", name: "جمبري", desc: "فطير حادق بالجمبري والموزاريلا", image: ITEM_PHOTOS.shrimpPie, prices: [{ label: "وسط", price: 255 }, { label: "كبير", price: 370 }], available: true },
 
             // --- القسم 2: البيتزا ---
-            { id: "pz_1", category: "cat-pizza", name: "مارجريتا", desc: "صلصة البيتزا وجبنة موزاريلا طبيعي", prices: [{ label: "وسط", price: 105 }, { label: "كبير", price: 145 }], available: true },
-            { id: "pz_2", category: "cat-pizza", name: "مشروم", desc: "بيتزا بالمشروم الطازج والموزاريلا", prices: [{ label: "وسط", price: 130 }, { label: "كبير", price: 180 }], available: true },
-            { id: "pz_3", category: "cat-pizza", name: "سدق", desc: "بيتزا بالسدق الشرقي المتبل", prices: [{ label: "وسط", price: 140 }, { label: "كبير", price: 190 }], available: true },
-            { id: "pz_4", category: "cat-pizza", name: "لحم مفروم", desc: "بيتزا باللحم المفروم والموزاريلا", prices: [{ label: "وسط", price: 140 }, { label: "كبير", price: 190 }], available: true },
-            { id: "pz_5", category: "cat-pizza", name: "بسطرمة", desc: "بيتزا بالبسطرمة ", prices: [{ label: "وسط", price: 155 }, { label: "كبير", price: 215 }], available: true },
-            { id: "pz_6", category: "cat-pizza", name: "مشكل لحوم", desc: "سجق - بسطرمة - لحم مفروم", prices: [{ label: "وسط", price: 175 }, { label: "كبير", price: 225 }], available: true },
-            { id: "pz_7", category: "cat-pizza", name: "مشكل جبن", desc: "موتزاريلا - رومي - كيري - لافاشكيري - شيدر", prices: [{ label: "وسط", price: 150 }, { label: "كبير", price: 210 }], available: true },
-            { id: "pz_8", category: "cat-pizza", name: "سوسيس", desc: "بيتزا بالسوسيس والموزاريلا", prices: [{ label: "وسط", price: 115 }, { label: "كبير", price: 170 }], available: true },
-            { id: "pz_9", category: "cat-pizza", name: "سلامي", desc: "بيتزا بالسلامي والموزاريلا", prices: [{ label: "وسط", price: 140 }, { label: "كبير", price: 190 }], available: true },
-            { id: "pz_10", category: "cat-pizza", name: "سوبر سوبريم", desc: "سلامي - بيف - مشروم", prices: [{ label: "وسط", price: 155 }, { label: "كبير", price: 200 }], available: true },
-            { id: "pz_11", category: "cat-pizza", name: "دجاج", desc: "بيتزا بقطع الدجاج والموزاريلا", prices: [{ label: "وسط", price: 155 }, { label: "كبير", price: 200 }], available: true },
-            { id: "pz_12", category: "cat-pizza", name: "دجاج كرسبي", desc: "بيتزا بقطع الدجاج الكرسبي", prices: [{ label: "وسط", price: 155 }, { label: "كبير", price: 200 }], available: true },
-            { id: "pz_13", category: "cat-pizza", name: "مشكل دجاج", desc: "شرائح بانيه - شيش - شاورما", prices: [{ label: "كبير", price: 170 }], available: true },
-            { id: "pz_14", category: "cat-pizza", name: "تونة", desc: "بيتزا بالتونة والبصل والفلفل والزيتون", prices: [{ label: "كبير", price: 190 }], available: true },
-            { id: "pz_15", category: "cat-pizza", name: "جمبري", desc: "بيتزا بالجمبري والموزاريلا", prices: [{ label: "وسط", price: 255 }, { label: "كبير", price: 300 }], available: true },
-            { id: "pz_16", category: "cat-pizza", name: "ستافت كراست (حشو الأطراف)", desc: "إضافة حشو جبنة لأطراف البيتزا الكبيرة", isAddon: true, prices: [{ label: "كبير", price: 60 }], available: true },
-
-            // --- القسم 3: مكرونات ---
-            { id: "ps_1", category: "cat-pasta", name: "خضار", desc: "طاجن مكرونة بالخضروات والموزاريلا", prices: [{ label: "صغير", price: 60 }, { label: "وسط", price: 80 }], available: true },
-            { id: "ps_2", category: "cat-pasta", name: "مشروم", desc: "طاجن مكرونة بالمشروم والموزاريلا", prices: [{ label: "صغير", price: 75 }, { label: "وسط", price: 100 }], available: true },
-            { id: "ps_3", category: "cat-pasta", name: "سجق", desc: "طاجن مكرونة بالسجق ", prices: [{ label: "صغير", price: 85 }, { label: "وسط", price: 110 }], available: true },
-            { id: "ps_4", category: "cat-pasta", name: "مفروم", desc: "طاجن مكرونة باللحم المفروم", prices: [{ label: "صغير", price: 85 }, { label: "وسط", price: 110 }], available: true },
-            { id: "ps_5", category: "cat-pasta", name: "بسطرمة", desc: "طاجن مكرونة بالبسطرمة والجبن", prices: [{ label: "صغير", price: 100 }, { label: "وسط", price: 130 }], available: true },
-            { id: "ps_6", category: "cat-pasta", name: "مشكل لحوم", desc: "سجق - بسطرمة - لحم مفروم", prices: [{ label: "وسط", price: 135 }], available: true },
-            { id: "ps_7", category: "cat-pasta", name: "مشكل جبن", desc: "موتزاريلا - رومي - كيري - لافاشكيري - شيدر", prices: [{ label: "صغير", price: 100 }, { label: "وسط", price: 130 }], available: true },
-            { id: "ps_8", category: "cat-pasta", name: "سوسيس", desc: "طاجن مكرونة بالسوسيس", prices: [{ label: "صغير", price: 75 }, { label: "وسط", price: 100 }], available: true },
-            { id: "ps_9", category: "cat-pasta", name: "دجاج", desc: "طاجن مكرونة بقطع الدجاج", prices: [{ label: "صغير", price: 100 }, { label: "وسط", price: 130 }], available: true },
-            { id: "ps_10", category: "cat-pasta", name: "نجرسكو", desc: "دجاج - مشروم بالصوص الأبيض والموزاريلا", prices: [{ label: "صغير", price: 105 }, { label: "وسط", price: 140 }], available: true },
-            { id: "ps_11", category: "cat-pasta", name: "دجاج كرسبي", desc: "طاجن مكرونة بالدجاج الكرسبي", prices: [{ label: "صغير", price: 105 }, { label: "وسط", price: 140 }], available: true },
-            { id: "ps_12", category: "cat-pasta", name: "جمبري", desc: "طاجن مكرونة بالجمبري والموزاريلا", prices: [{ label: "صغير", price: 135 }, { label: "وسط", price: 185 }], available: true },
-
-            // --- القسم 4: فطير حلو ---
-            { id: "swf_1", category: "cat-sweet-feteer", name: "سادة", desc: "فطير حلو مورق بالسمنة البلدي والسكر", prices: [{ label: "فطيرة", price: 45 }], available: true },
-            { id: "swf_2", category: "cat-sweet-feteer", name: "كاستر", desc: "فطير حلو محشو كاستر", prices: [{ label: "فطيرة", price: 50 }], available: true },
-            { id: "swf_3", category: "cat-sweet-feteer", name: "بغاشة جوز هند", desc: "فطير بغاشة بجوز الهند واللبن", prices: [{ label: "فطيرة", price: 70 }], available: true },
-            { id: "swf_4", category: "cat-sweet-feteer", name: "ملوكي زبيب وجوز هند", desc: "زبيب وجوز هند وسكر ولبن", prices: [{ label: "فطيرة", price: 105 }], available: true },
-            { id: "swf_5", category: "cat-sweet-feteer", name: "بوريو", desc: "فطير حلو ببسكويت البوريو والشيكولاتة", prices: [{ label: "فطيرة", price: 80 }], available: true },
-            { id: "swf_6", category: "cat-sweet-feteer", name: "هوهوز", desc: "فطير حلو بالكيك والهوهوز والشيكولاتة", prices: [{ label: "فطيرة", price: 80 }], available: true },
-            { id: "swf_7", category: "cat-sweet-feteer", name: "قشطة وعسل", desc: "فطير حلو بالقشطة البلدي وعسل النحل", prices: [{ label: "فطيرة", price: 135 }], available: true },
-            { id: "swf_8", category: "cat-sweet-feteer", name: "شيكولاتة", desc: "فطير حلو غني بالشيكولاتة", prices: [{ label: "فطيرة", price: 105 }], available: true },
-            { id: "swf_9", category: "cat-sweet-feteer", name: "شيكولاتة مكسرات", desc: "فطير حلو بالشيكولاتة والمكسرات", prices: [{ label: "فطيرة", price: 135 }], available: true },
-            { id: "swf_10", category: "cat-sweet-feteer", name: "بلاك فورست", desc: "نص شيكولاتة - نص مكسرات", prices: [{ label: "فطيرة", price: 145 }], available: true },
-            { id: "swf_11", category: "cat-sweet-feteer", name: "كهرمانة مكسرات", desc: "كاستر - طبق - زبيب - جوز هند - قشطة - عسل - سمنة - لبن - قرفة", prices: [{ label: "فطيرة", price: 175 }], available: true },
-            { id: "swf_12", category: "cat-sweet-feteer", name: "بابا علي حلو", desc: "كاستر - موز - قشطة - عسل - سكر - لبن - سمنة - قرفة - شيكولاتة - مكسرات", prices: [{ label: "فطيرة", price: 215 }], available: true },
-            { id: "swf_add1", category: "cat-sweet-feteer", name: "إضافة عسل - فواكه (موز)", desc: "إضافة للفطير الحلو", isAddon: true, prices: [{ label: "إضافة", price: 20 }], available: true },
-            { id: "swf_add2", category: "cat-sweet-feteer", name: "إضافة قشطة - مكسرات", desc: "إضافة للفطير الحلو", isAddon: true, prices: [{ label: "إضافة", price: 40 }], available: true },
-            { id: "swf_add3", category: "cat-sweet-feteer", name: "إضافة شيكولاتة", desc: "إضافة للفطير الحلو", isAddon: true, prices: [{ label: "إضافة", price: 25 }], available: true },
-
-            // --- القسم 5: كريب حادق وحلو ---
-            { id: "cr_1", category: "cat-crepe", name: "كريب بطاطس", desc: "بطاطس مقلية وصوصات وجبنة موزاريلا", prices: [{ label: "كريب", price: 90 }], available: true },
-            { id: "cr_2", category: "cat-crepe", name: "كريب موتزاريلا", desc: "جبنة موتزاريلا طبيعي", prices: [{ label: "كريب", price: 100 }], available: true },
-            { id: "cr_3", category: "cat-crepe", name: "كريب مشكل جبن", desc: "موتزاريلا - رومي - كيري - لافاشكيري - شيدر", prices: [{ label: "كريب", price: 115 }], available: true },
-            { id: "cr_4", category: "cat-crepe", name: "كريب سجق", desc: "سجق بلدي متبل مع جبنة", prices: [{ label: "كريب", price: 115 }], available: true },
-            { id: "cr_5", category: "cat-crepe", name: "كريب بسطرمة", desc: "بسطرمة بلدي مع جبنة", prices: [{ label: "كريب", price: 120 }], available: true },
-            { id: "cr_6", category: "cat-crepe", name: "كريب مشكل لحوم", desc: "سجق - بسطرمة - لحم مفروم", prices: [{ label: "كريب", price: 140 }], available: true },
-            { id: "cr_7", category: "cat-crepe", name: "كريب برجر لحم / فراخ", desc: "قطع برجر مشوي مع صوص وجبنة", prices: [{ label: "كريب", price: 110 }], available: true },
-            { id: "cr_8", category: "cat-crepe", name: "كريب سوسيس", desc: "سوسيس مع جبنة وصوصات", prices: [{ label: "كريب", price: 105 }], available: true },
-            { id: "cr_9", category: "cat-crepe", name: "كريب استربس بارد / زنجر", desc: "قطع استربس مقرمشة مع جبنة", prices: [{ label: "كريب", price: 130 }], available: true },
-            { id: "cr_10", category: "cat-crepe", name: "كريب فراخ بانيه", desc: "شرائح فراخ بانيه مقرمشة", prices: [{ label: "كريب", price: 130 }], available: true },
-            { id: "cr_11", category: "cat-crepe", name: "كريب شيش طاووق", desc: "قطع شيش طاووق متبلة", prices: [{ label: "كريب", price: 130 }], available: true },
-            { id: "cr_12", category: "cat-crepe", name: "كريب شاورما فراخ", desc: "شاورما فراخ وثومية ومخلل", prices: [{ label: "كريب", price: 130 }], available: true },
-            { id: "cr_13", category: "cat-crepe", name: "كريب ميكس تشيكن", desc: "شرائح بانيه - شيش - شاورما", prices: [{ label: "كريب", price: 140 }], available: true },
-            { id: "cr_14", category: "cat-crepe", name: "كريب جمبري مقلي", desc: "جمبري مقلي مقرمش وصوص", prices: [{ label: "كريب", price: 155 }], available: true },
-            { id: "cr_15", category: "cat-crepe", name: "كريب حلو شيكولاتة", desc: "كريب حلو محشو شيكولاتة", prices: [{ label: "كريب حلو", price: 55 }], available: true },
-            { id: "cr_16", category: "cat-crepe", name: "كريب حلو شيكولاتة بندق", desc: "كريب حلو شيكولاتة بالبندق", prices: [{ label: "كريب حلو", price: 80 }], available: true },
-
-            // --- القسم 6: سندوتشات ---
-            { id: "sd_1", category: "cat-sandwiches", name: "بطاطس مايونيز", desc: "بطاطس مقلية ومايونيز", prices: [{ label: "سوري", price: 45 }, { label: "بيتي بان", price: 45 }], available: true },
-            { id: "sd_2", category: "cat-sandwiches", name: "بطاطس موتزاريلا", desc: "بطاطس مقلية مع جبنة موتزاريلا", prices: [{ label: "سوري", price: 60 }, { label: "بيتي بان", price: 60 }], available: true },
-            { id: "sd_3", category: "cat-sandwiches", name: "شيدر مقلية", desc: "جبنة شيدر مقلية مقرمشة", prices: [{ label: "سوري", price: 50 }, { label: "بيتي بان", price: 50 }], available: true },
-            { id: "sd_4", category: "cat-sandwiches", name: "بيض أومليت كيزر", desc: "بيض أومليت طازج", prices: [{ label: "سوري", price: 35 }], available: true },
-            { id: "sd_5", category: "cat-sandwiches", name: "برجر لحم / فراخ", desc: "برجر مشوي مع خضروات وصوص", prices: [{ label: "سوري", price: 40 }], available: true },
-            { id: "sd_6", category: "cat-sandwiches", name: "سجق جريل", desc: "سجق مشوي على الجريل", prices: [{ label: "سوري", price: 60 }, { label: "بيتي بان", price: 65 }], available: true },
-            { id: "sd_7", category: "cat-sandwiches", name: "سجق إسكندراني", desc: "سجق بالخلطة الإسكندراني", prices: [{ label: "سوري", price: 60 }, { label: "بيتي بان", price: 65 }], available: true },
-            { id: "sd_8", category: "cat-sandwiches", name: "سجق ميكسيكانو حار", desc: "سجق بالخلطة المكسيكية الحارة", prices: [{ label: "سوري", price: 70 }, { label: "بيتي بان", price: 75 }], available: true },
-            { id: "sd_9", category: "cat-sandwiches", name: "كفتة مشوية", desc: "كفتة مشوية على الفحم", prices: [{ label: "سوري", price: 65 }, { label: "بيتي بان", price: 75 }], available: true },
-            { id: "sd_10", category: "cat-sandwiches", name: "سوسيس", desc: "سوسيس متبل", prices: [{ label: "سوري", price: 60 }, { label: "بيتي بان", price: 65 }], available: true },
-            { id: "sd_11", category: "cat-sandwiches", name: "بانيه", desc: "فراخ بانيه مقرمشة", prices: [{ label: "سوري", price: 75 }, { label: "بيتي بان", price: 80 }], available: true },
-            { id: "sd_12", category: "cat-sandwiches", name: "شيش طاووق", desc: "قطع شيش طاووق مشوية", prices: [{ label: "سوري", price: 75 }, { label: "بيتي بان", price: 80 }], available: true },
-            { id: "sd_13", category: "cat-sandwiches", name: "شاورما فراخ", desc: "شاورما فراخ وثومية", prices: [{ label: "سوري", price: 75 }, { label: "بيتي بان", price: 80 }], available: true },
-            { id: "sd_14", category: "cat-sandwiches", name: "استربس بارد / حار", desc: "قطع استربس دجاج مقرمشة", prices: [{ label: "سوري", price: 75 }, { label: "بيتي بان", price: 80 }], available: true },
-            { id: "sd_15", category: "cat-sandwiches", name: "جمبري مقلي", desc: "جمبري مقلي ذهبي", prices: [{ label: "سوري", price: 105 }, { label: "بيتي بان", price: 110 }], available: true },
-
-            // --- القسم 7: فطير ويتش والمشلتت ---
-            { id: "wm_1", category: "cat-witch-meshaltet", name: "فطير ويتش موتزاريلا", desc: "فطير ويتش محشو جبنة موتزاريلا", prices: [{ label: "سندوتش", price: 80 }], available: true },
-            { id: "wm_2", category: "cat-witch-meshaltet", name: "فطير ويتش بطاطس", desc: "فطير ويتش بالبطاطس والجبن", prices: [{ label: "سندوتش", price: 80 }], available: true },
-            { id: "wm_3", category: "cat-witch-meshaltet", name: "فطير ويتش سوسيس", desc: "فطير ويتش بالسوسيس", prices: [{ label: "سندوتش", price: 85 }], available: true },
-            { id: "wm_4", category: "cat-witch-meshaltet", name: "فطير ويتش سجق", desc: "فطير ويتش بالسجق البلدي", prices: [{ label: "سندوتش", price: 105 }], available: true },
-            { id: "wm_5", category: "cat-witch-meshaltet", name: "فطير ويتش لحم مفروم", desc: "فطير ويتش باللحم المفروم", prices: [{ label: "سندوتش", price: 105 }], available: true },
-            { id: "wm_6", category: "cat-witch-meshaltet", name: "فطير ويتش بسطرمة", desc: "فطير ويتش بالبسطرمة", prices: [{ label: "سندوتش", price: 120 }], available: true },
-            { id: "wm_7", category: "cat-witch-meshaltet", name: "فطير ويتش فراخ", desc: "فطير ويتش بقطع الفراخ", prices: [{ label: "سندوتش", price: 110 }], available: true },
-            { id: "wm_8", category: "cat-witch-meshaltet", name: "فطير ويتش مشكل لحوم", desc: "سجق - بسطرمة - لحم مفروم", prices: [{ label: "سندوتش", price: 130 }], available: true },
-            { id: "wm_9", category: "cat-witch-meshaltet", name: "فطير ويتش مشكل جبن", desc: "تشكيلة أجبان فاخرة", prices: [{ label: "سندوتش", price: 120 }], available: true },
-            { id: "wm_10", category: "cat-witch-meshaltet", name: "فطير ويتش استربس بارد / حار", desc: "فطير ويتش بقطع الاستربس", prices: [{ label: "سندوتش", price: 110 }], available: true },
-            { id: "wm_11", category: "cat-witch-meshaltet", name: "فطير مشلتت (بالسمن البلدي)", desc: "فطير مشلتت فلاحي مورق بالسمن البلدي", prices: [{ label: "وسط", price: 140 }, { label: "كبير", price: 165 }], available: true },
-
-            // --- القسم 8: بروستد ومقبلات وإضافات ---
-            { id: "be_1", category: "cat-broasted-extras", name: "سناك بروستد", desc: "2 ق بروستد + ثومية + خبز + بطاطس", prices: [{ label: "وجبة", price: 135 }], available: true },
-            { id: "be_2", category: "cat-broasted-extras", name: "دبل بروستد", desc: "4 ق بروستد + بطاطس + ثومية أو كولسلو + 2 خبز", prices: [{ label: "وجبة", price: 230 }], available: true },
-            { id: "be_3", category: "cat-broasted-extras", name: "سرفيت بروستد", desc: "8 ق بروستد + بطاطس فاميلي + ثومية + كولسلو + 4 خبز", prices: [{ label: "وجبة", price: 425 }], available: true },
-            { id: "be_4", category: "cat-broasted-extras", name: "سوبر فاميلي بروستد", desc: "12 ق بروستد + بطاطس فاميلي + ثومية + كولسلو + 6 خبز", prices: [{ label: "وجبة", price: 575 }], available: true },
-            { id: "be_5", category: "cat-broasted-extras", name: "سناك استربس", desc: "3 ق استربس + بطاطس + كاتشب + ثومية + 1 خبز", prices: [{ label: "وجبة", price: 135 }], available: true },
-            { id: "be_6", category: "cat-broasted-extras", name: "دينر استربس", desc: "5 ق استربس + بطاطس + كولسلو + ثومية + 2 خبز", prices: [{ label: "وجبة", price: 175 }], available: true },
-            { id: "be_7", category: "cat-broasted-extras", name: "تشيكن رانش", desc: "عيش بريوش - صدور فراخ - كابوتشي - خيار مخلل - صوص رانش", prices: [{ label: "سندوتش", price: 100 }], available: true },
-            { id: "be_8", category: "cat-broasted-extras", name: "تشيكن راب", desc: "عيش تورتيلا - 2 قطعة استربس + كابوتشي + صوص شيدر", prices: [{ label: "سندوتش", price: 95 }], available: true },
-            { id: "be_9", category: "cat-broasted-extras", name: "فتة كرسبي", desc: "رانش أو باربيكيو - أرز - عيش محمص - استربس", prices: [{ label: "وجبة", price: 125 }], available: true },
-            { id: "be_10", category: "cat-broasted-extras", name: "تشيكن باربيكيو", desc: "عيش بريوش - صدور فراخ - كابوتشي - خيار مخلل - صوص باربيكيو", prices: [{ label: "سندوتش", price: 100 }], available: true },
-            { id: "be_11", category: "cat-broasted-extras", name: "تشيكن تشيزي فرايز", desc: "بوم فريت - استربس - صوص شيدر", prices: [{ label: "وسط", price: 75 }, { label: "كبير", price: 110 }], available: true },
-            { id: "be_12", category: "cat-broasted-extras", name: "ريزو", desc: "أرز ريزو متبل مع قطع دجاج كرسبي وصوص", prices: [{ label: "وجبة", price: 75 }], available: true },
-            { id: "be_13", category: "cat-broasted-extras", name: "تشيكن وينجز 6 قطع", desc: "أجنحة دجاج مقرمشة بالصوص", prices: [{ label: "صوص باربيكيو", price: 75 }, { label: "صوص بافلو", price: 85 }], available: true },
-            { id: "be_14", category: "cat-broasted-extras", name: "بطاطس", desc: "مقبلات - طبق بطاطس مقلية", prices: [{ label: "طبق", price: 35 }], available: true },
-            { id: "be_15", category: "cat-broasted-extras", name: "بطاطس بصوص", desc: "جبنة - رانش - سويت تشيلي", prices: [{ label: "طبق", price: 50 }], available: true },
-            { id: "be_16", category: "cat-broasted-extras", name: "بوب كورن", desc: "8 قطع - صوص هاني ماسترد", prices: [{ label: "طبق", price: 90 }], available: true },
-            { id: "be_17", category: "cat-broasted-extras", name: "موتزاريلا ستيك", desc: "3 قطع أصابع موتزاريلا مقلية", prices: [{ label: "طبق", price: 75 }], available: true },
-            { id: "be_18", category: "cat-broasted-extras", name: "باكيت بطاطس", desc: "باكيت بطاطس مقرمشة", prices: [{ label: "باكيت", price: 40 }], available: true },
-            { id: "be_19", category: "cat-broasted-extras", name: "مخلل / طحينة / سلطة خضراء / كول سلو", desc: "السلطات والمقبلات (اختر النوع في الملاحظات)", prices: [{ label: "مخلل / طماطم متبلة", price: 15 }, { label: "طحينة", price: 15 }, { label: "سلطة خضراء", price: 15 }, { label: "سلطة كول سلو", price: 15 }], available: true },
-            { id: "be_20", category: "cat-broasted-extras", name: "المشروبات", desc: "مشروبات غازية باردة", prices: [{ label: "كانز", price: 20 }, { label: "مياه غازية 1 لتر", price: 35 }], available: true },
-            // الإضافات المتنوعة
-            { id: "be_add1", category: "cat-broasted-extras", name: "إضافة أرز بسمتي مع أي وجبة", desc: "يضاف 30 ج مع أي وجبة", isAddon: true, prices: [{ label: "إضافة", price: 30 }], available: true },
-            { id: "be_add2", category: "cat-broasted-extras", name: "إضافة قطعة بروستد", desc: "إضافات البروستد", isAddon: true, prices: [{ label: "قطعة", price: 50 }], available: true },
-            { id: "be_add3", category: "cat-broasted-extras", name: "إضافة قطعة استربس", desc: "إضافات البروستد", isAddon: true, prices: [{ label: "قطعة", price: 35 }], available: true },
-            { id: "be_add4", category: "cat-broasted-extras", name: "إضافة أرز", desc: "طبق أرز منفصل", isAddon: true, prices: [{ label: "طبق", price: 35 }], available: true },
-            { id: "be_add5", category: "cat-broasted-extras", name: "إضافة ثومية / عيش كايزر", desc: "إضافات البروستد", isAddon: true, prices: [{ label: "ثومية", price: 5 }, { label: "عيش كايزر", price: 5 }], available: true },
-            { id: "be_add6", category: "cat-broasted-extras", name: "إضافة كول سلو", desc: "إضافات البروستد", isAddon: true, prices: [{ label: "علبة", price: 10 }], available: true },
-            { id: "be_add7", category: "cat-broasted-extras", name: "إضافة صوص باربيكيو / شيدر", desc: "إضافات البروستد", isAddon: true, prices: [{ label: "صوص باربيكيو", price: 20 }, { label: "صوص شيدر", price: 20 }], available: true },
-            { id: "be_add8", category: "cat-broasted-extras", name: "إضافة سويت تشيلي / صوص رانش", desc: "إضافات البروستد", isAddon: true, prices: [{ label: "سويت تشيلي", price: 25 }, { label: "صوص رانش", price: 25 }], available: true },
-            { id: "be_add9", category: "cat-broasted-extras", name: "إضافة وش بيتزا (بيبروني - سوسيس)", desc: "إضافات الفطير والبيتزا", isAddon: true, prices: [{ label: "وسط", price: 40 }, { label: "كبير", price: 55 }], available: true },
-            { id: "be_add10", category: "cat-broasted-extras", name: "إضافة موتزاريلا (فطير/بيتزا)", desc: "إضافات الفطير والبيتزا", isAddon: true, prices: [{ label: "وسط", price: 30 }, { label: "كبير", price: 40 }], available: true },
-            { id: "be_add11", category: "cat-broasted-extras", name: "إضافة كيري (فطير/بيتزا)", desc: "إضافات الفطير والبيتزا", isAddon: true, prices: [{ label: "وسط", price: 40 }, { label: "كبير", price: 50 }], available: true },
-            { id: "be_add12", category: "cat-broasted-extras", name: "إضافة مشروم (فطير/بيتزا)", desc: "إضافات الفطير والبيتزا", isAddon: true, prices: [{ label: "وسط", price: 25 }, { label: "كبير", price: 35 }], available: true },
-            { id: "be_add13", category: "cat-broasted-extras", name: "إضافة لحوم (فطير/بيتزا)", desc: "إضافات الفطير والبيتزا", isAddon: true, prices: [{ label: "وسط", price: 40 }, { label: "كبير", price: 55 }], available: true },
-            { id: "be_add14", category: "cat-broasted-extras", name: "إضافة سي فود جمبري (فطير/بيتزا)", desc: "إضافات الفطير والبيتزا", isAddon: true, prices: [{ label: "وسط", price: 60 }, { label: "كبير", price: 75 }], available: true },
-            { id: "be_add15", category: "cat-broasted-extras", name: "إضافة صوص باربيكيو/رانش (فطير/بيتزا)", desc: "إضافات الفطير والبيتزا", isAddon: true, prices: [{ label: "وسط", price: 15 }, { label: "كبير", price: 20 }], available: true }
-        ];
-
-        // 4. إدارة الحالة في التخزين المحلي
-        let appSettings = JSON.parse(localStorage.getItem("babaAli_v3_settings")) || { ...INITIAL_SETTINGS };
-        let appMenuItems = JSON.parse(localStorage.getItem("babaAli_v3_items")) || JSON.parse(JSON.stringify(INITIAL_MENU_ITEMS));
-        let appOrders = JSON.parse(localStorage.getItem("babaAli_v3_orders")) || [];
-        let appCart = JSON.parse(localStorage.getItem("babaAli_v3_cart")) || [];
-
-        let currentCategory = "all";
-        let currentSearch = "";
-        let itemSizeSelections = {};
-        let isAdminLoggedIn = false;
-
-        function persistData() {
-            localStorage.setItem("babaAli_v3_settings", JSON.stringify(appSettings));
-            localStorage.setItem("babaAli_v3_items", JSON.stringify(appMenuItems));
-            localStorage.setItem("babaAli_v3_orders", JSON.stringify(appOrders));
-            localStorage.setItem("babaAli_v3_cart", JSON.stringify(appCart));
-        }
-
-        // إشعارات Toast
-        function notify(msg, type = "success") {
-            const container = document.getElementById("toast-container");
-            const el = document.createElement("div");
-            const colorClass = type === "error" ? "bg-babaRed-800 border-red-400" : "bg-emerald-700 border-emerald-300";
-            el.className = `${colorClass} text-white px-4 py-3 rounded-xl shadow-xl border-r-4 text-xs sm:text-sm font-extrabold flex items-center gap-2 pointer-events-auto transition-opacity duration-300`;
-            el.innerHTML = `<i class="fa-solid ${type === "error" ? "fa-circle-exclamation" : "fa-circle-check"}"></i><span>${msg}</span>`;
-            container.appendChild(el);
-            setTimeout(() => {
-                el.style.opacity = "0";
-                setTimeout(() => el.remove(), 300);
-            }, 2800);
-        }
-
-        // نسخ نص عبر الحافظة بأمان
-        function copyTextFallback(text, successMessage) {
-            const ta = document.createElement("textarea");
-            ta.value = text;
-            document.body.appendChild(ta);
-            ta.select();
-            document.execCommand("copy");
-            document.body.removeChild(ta);
-            notify(successMessage, "success");
-        }
-
-        function copyInstaPayNumber() {
-            copyTextFallback(appSettings.instaPay, `تم نسخ رقم إنستاباي: ${appSettings.instaPay}`);
-        }
-
-        // تحديث بيانات الهوية في الواجهة
-        function syncSettingsUI() {
-            document.getElementById("header-address-text").textContent = appSettings.address;
-            document.getElementById("header-phones-text").textContent = appSettings.phones;
-            document.getElementById("hero-instapay-num").textContent = appSettings.instaPay;
-            document.getElementById("checkout-instapay-display").textContent = appSettings.instaPay;
-            document.getElementById("checkout-wa-display").textContent = appSettings.whatsapp;
-            document.getElementById("footer-address-text").textContent = appSettings.address;
-            document.getElementById("footer-phones-text").textContent = appSettings.phones;
-            document.getElementById("footer-instapay-text").textContent = appSettings.instaPay;
-            document.getElementById("footer-wa-text").textContent = appSettings.whatsapp;
-
-            const waInternational = appSettings.whatsapp.replace(/^0/, "20");
-            document.getElementById("hero-wa-direct").href = `https://wa.me/${waInternational}`;
-        }
-
-        // رسم أزرار الأقسام
-        function renderCategoryTabs() {
-            const bar = document.getElementById("category-tabs-bar");
-            let html = `
-                <button onclick="selectCategoryFilter('all')" class="px-3.5 py-2 rounded-xl text-xs font-extrabold whitespace-nowrap transition flex items-center gap-1.5 ${currentCategory === 'all' ? 'bg-babaRed-700 text-white shadow' : 'bg-stone-100 text-stone-700 hover:bg-amber-100'}">
-                    <i class="fa-solid fa-layer-group"></i>
-                    <span>الكل (${appMenuItems.length})</span>
-                </button>
-            `;
-            MENU_CATEGORIES.forEach(cat => {
-                const count = appMenuItems.filter(i => i.category === cat.id).length;
-                const active = currentCategory === cat.id;
-                html += `
-                    <button onclick="selectCategoryFilter('${cat.id}')" class="px-3.5 py-2 rounded-xl text-xs font-extrabold whitespace-nowrap transition flex items-center gap-1.5 ${active ? 'bg-babaAmber-600 text-white shadow' : 'bg-stone-100 text-stone-700 hover:bg-amber-100'}">
-                        <i class="fa-solid ${cat.icon}"></i>
-                        <span>${cat.name} (${count})</span>
-                    </button>
-                `;
-            });
-            bar.innerHTML = html;
-        }
-
-        function selectCategoryFilter(catId) {
-            currentCategory = catId;
-            renderCategoryTabs();
-            renderCustomerMenu();
-        }
-
-        function onSearchMenu(val) {
-            currentSearch = val.trim().toLowerCase();
-            document.getElementById("clear-search-btn").classList.toggle("hidden", !currentSearch);
-            renderCustomerMenu();
-        }
-
-        function clearMenuSearch() {
-            document.getElementById("menu-search-input").value = "";
-            onSearchMenu("");
-        }
-
-        // اختيار الحجم داخل البطاقة
-        function chooseCardSize(itemId, idx) {
-            itemSizeSelections[itemId] = idx;
-            const item = appMenuItems.find(i => i.id === itemId);
-            if (!item) return;
-
-            const priceTag = document.getElementById(`card-price-${itemId}`);
-            if (priceTag && item.prices[idx]) {
-                priceTag.textContent = `${item.prices[idx].price} ج`;
-            }
-
-            item.prices.forEach((_, i) => {
-                const btn = document.getElementById(`card-size-${itemId}-${i}`);
-                if (btn) {
-                    btn.className = i === idx
-                        ? "flex-1 py-1.5 px-2 rounded-lg text-xs font-extrabold bg-babaAmber-600 text-white shadow-xs transition"
-                        : "flex-1 py-1.5 px-2 rounded-lg text-xs font-bold text-stone-700 hover:bg-amber-100 transition";
-                }
-            });
-        }
-
-        // رسم المنيو الكامل
-        function renderCustomerMenu() {
-            const wrapper = document.getElementById("menu-sections-wrapper");
-            const catsToRender = currentCategory === "all"
-                ? MENU_CATEGORIES
-                : MENU_CATEGORIES.filter(c => c.id === currentCategory);
-
-            let totalShown = 0;
-            let output = "";
-
-            catsToRender.forEach(cat => {
-                let items = appMenuItems.filter(i => i.category === cat.id);
-                if (currentSearch) {
-                    items = items.filter(i =>
-                        i.name.toLowerCase().includes(currentSearch) ||
-                        (i.desc && i.desc.toLowerCase().includes(currentSearch))
-                    );
-                }
-                if (items.length === 0) return;
-                totalShown += items.length;
-
-                output += `
-                    <section class="space-y-4">
-                        <div class="relative rounded-2xl overflow-hidden shadow-md border border-amber-200 bg-babaDark">
-                            <img src="${cat.image}" alt="${cat.name}" onerror="this.src='https://placehold.co/800x200/7F1D1D/FFFBEB?text=${encodeURIComponent(cat.name)}'" class="w-full h-28 sm:h-36 object-cover opacity-40">
-                            <div class="absolute inset-0 bg-gradient-to-l from-babaDark/95 via-babaDark/75 to-transparent p-4 sm:p-5 flex flex-col justify-center">
-                                <div class="flex items-center gap-2 mb-1">
-                                    <span class="bg-babaAmber-500 text-babaDark text-[11px] font-black px-2.5 py-0.5 rounded-full">${cat.badge}</span>
-                                    <span class="text-amber-300 text-xs font-bold">${items.length} صنف</span>
-                                </div>
-                                <h3 class="text-xl sm:text-2xl font-black text-white flex items-center gap-2">
-                                    <i class="fa-solid ${cat.icon} text-babaAmber-400"></i>
-                                    <span>${cat.name}</span>
-                                </h3>
-                                <p class="text-amber-100/90 text-xs mt-0.5">${cat.note}</p>
-                            </div>
-                        </div>
-
-                        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3.5 sm:gap-4">
-                            ${items.map(item => buildMenuCardHTML(item)).join("")}
-                        </div>
-                    </section>
-                `;
-            });
-
-            if (totalShown === 0) {
-                output = `
-                    <div class="bg-white rounded-2xl p-10 text-center border border-amber-200">
-                        <i class="fa-solid fa-magnifying-glass text-3xl text-stone-300 mb-2"></i>
-                        <p class="font-extrabold text-stone-700">لا توجد نتائج مطابقة لبحثك</p>
-                        <button onclick="clearMenuSearch(); selectCategoryFilter('all')" class="mt-3 bg-babaAmber-600 text-white text-xs font-extrabold px-4 py-2 rounded-xl">عرض المنيو بالكامل</button>
-                    </div>
-                `;
-            }
-
-            wrapper.innerHTML = output;
-            document.getElementById("visible-items-count").textContent = `عرض ${totalShown} صنف`;
-        }
-
-        function buildMenuCardHTML(item) {
-            const selIdx = itemSizeSelections[item.id] !== undefined ? itemSizeSelections[item.id] : 0;
-            const activePrice = item.prices[selIdx] || item.prices[0];
-            const isAvail = item.available !== false;
-
-            return `
-                <div class="menu-card bg-white rounded-2xl p-4 border ${item.isAddon ? 'border-amber-300 bg-amber-50/40' : 'border-stone-200'} shadow-xs flex flex-col justify-between relative ${!isAvail ? 'opacity-65' : ''}">
-                    ${!isAvail ? `<span class="absolute top-3 left-3 bg-babaRed-700 text-white text-[10px] font-black px-2 py-0.5 rounded-full">غير متاح</span>` : ''}
-                    ${item.isAddon ? `<span class="inline-block w-fit bg-amber-200 text-babaAmber-700 text-[10px] font-black px-2 py-0.5 rounded mb-1">إضافة</span>` : ''}
-
-                    <div>
-                        <div class="flex items-start justify-between gap-2 mb-1">
-                            <h4 class="font-extrabold text-stone-900 text-sm sm:text-base leading-snug">${item.name}</h4>
-                            <span id="card-price-${item.id}" class="font-black text-base text-babaRed-700 bg-red-50 border border-red-100 px-2.5 py-0.5 rounded-lg whitespace-nowrap">
-                                ${activePrice.price} ج
-                            </span>
-                        </div>
-                        <p class="text-xs text-stone-500 leading-relaxed mb-3 min-h-[30px]">${item.desc || ''}</p>
-                    </div>
-
-                    <div class="pt-2 border-t border-stone-100 space-y-2">
-                        ${item.prices.length > 1 ? `
-                            <div class="flex flex-wrap gap-1 bg-stone-100 p-1 rounded-xl">
-                                ${item.prices.map((p, idx) => `
-                                    <button id="card-size-${item.id}-${idx}" onclick="chooseCardSize('${item.id}', ${idx})" class="flex-1 py-1.5 px-2 rounded-lg text-xs transition ${idx === selIdx ? 'font-extrabold bg-babaAmber-600 text-white shadow-xs' : 'font-bold text-stone-700 hover:bg-amber-100'}">
-                                        ${p.label} (${p.price}ج)
-                                    </button>
-                                `).join('')}
-                            </div>
-                        ` : `
-                            <div class="flex items-center justify-between text-xs text-stone-500 font-bold px-1">
-                                <span>الحجم / النوع:</span>
-                                <span class="text-stone-800">${activePrice.label}</span>
-                            </div>
-                        `}
-
-                        <button onclick="addItemToCart('${item.id}')" ${!isAvail ? 'disabled' : ''} class="w-full py-2.5 rounded-xl font-extrabold text-xs sm:text-sm flex items-center justify-center gap-2 transition ${isAvail ? 'bg-babaDark hover:bg-babaRed-700 text-white cursor-pointer' : 'bg-stone-300 text-stone-500 cursor-not-allowed'}">
-                            <i class="fa-solid fa-cart-plus text-babaAmber-400"></i>
-                            <span>${isAvail ? 'أضف إلى السلة' : 'غير متاح'}</span>
-                        </button>
-                    </div>
-                </div>
-            `;
-        }
-
-        // =====================================================================
-        // منطق السلة والرابط المباشر للواتساب
-        // =====================================================================
-        function addItemToCart(itemId) {
-            const item = appMenuItems.find(i => i.id === itemId);
-            if (!item || item.available === false) return;
-
-            const selIdx = itemSizeSelections[item.id] !== undefined ? itemSizeSelections[item.id] : 0;
-            const chosen = item.prices[selIdx] || item.prices[0];
-            const key = `${item.id}__${chosen.label}`;
-
-            const found = appCart.find(c => c.key === key);
-            if (found) {
-                found.qty += 1;
-            } else {
-                appCart.push({
-                    key,
-                    id: item.id,
-                    name: item.name,
-                    size: chosen.label,
-                    price: chosen.price,
-                    qty: 1
-                });
-            }
-
-            persistData();
-            refreshCartUI();
-            notify(`تمت إضافة "${item.name} (${chosen.label})" للسلة`);
-        }
-
-        function modifyCartQty(key, delta) {
-            const idx = appCart.findIndex(c => c.key === key);
-            if (idx === -1) return;
-            appCart[idx].qty += delta;
-            if (appCart[idx].qty <= 0) {
-                appCart.splice(idx, 1);
-            }
-            persistData();
-            refreshCartUI();
-        }
-
-        function refreshCartUI() {
-            const totalCount = appCart.reduce((acc, c) => acc + c.qty, 0);
-            const totalAmount = appCart.reduce((acc, c) => acc + (c.price * c.qty), 0);
-
-            document.getElementById("header-cart-badge").textContent = totalCount;
-            document.getElementById("floating-cart-badge").textContent = totalCount;
-            document.getElementById("cart-grand-total").textContent = `${totalAmount} ج.م`;
-
-            const listEl = document.getElementById("cart-items-container");
-            const formEl = document.getElementById("cart-checkout-form");
-            const footerEl = document.getElementById("cart-drawer-footer");
-
-            if (appCart.length === 0) {
-                listEl.innerHTML = `
-                    <div class="text-center py-12">
-                        <i class="fa-solid fa-basket-shopping text-4xl text-stone-300 mb-2"></i>
-                        <p class="font-extrabold text-stone-600 text-sm">السلة فارغة حالياً</p>
-                        <p class="text-xs text-stone-400 mt-1">أضف أصنافك المفضلة من المنيو للطلب</p>
-                    </div>
-                `;
-                formEl.classList.add("hidden");
-                footerEl.classList.add("hidden");
-                return;
-            }
-
-            formEl.classList.remove("hidden");
-            footerEl.classList.remove("hidden");
-
-            listEl.innerHTML = appCart.map(c => `
-                <div class="bg-stone-50 border border-stone-200 rounded-xl p-3 flex items-center justify-between gap-2">
-                    <div class="flex-1">
-                        <h5 class="font-extrabold text-xs sm:text-sm text-stone-900">${c.name}</h5>
-                        <div class="flex items-center gap-2 text-xs text-stone-500 mt-0.5">
-                            <span class="bg-amber-100 text-babaAmber-700 font-bold px-2 py-0.5 rounded">${c.size}</span>
-                            <span>${c.price} ج × ${c.qty}</span>
-                        </div>
-                    </div>
-                    <div class="flex items-center gap-2">
-                        <span class="font-black text-sm text-babaRed-700">${c.price * c.qty} ج</span>
-                        <div class="flex items-center bg-white border border-stone-300 rounded-lg overflow-hidden">
-                            <button onclick="modifyCartQty('${c.key}', 1)" class="w-7 h-7 font-black text-emerald-700 hover:bg-emerald-50">+</button>
-                            <span class="px-2 text-xs font-black">${c.qty}</span>
-                            <button onclick="modifyCartQty('${c.key}', -1)" class="w-7 h-7 font-black text-babaRed-700 hover:bg-red-50">-</button>
-                        </div>
-                    </div>
-                </div>
-            `).join("");
-
-            updateLiveWhatsAppLink();
-        }
-
-        function toggleCartDrawer(show) {
-            const backdrop = document.getElementById("cart-backdrop");
-            const drawer = document.getElementById("cart-drawer");
-            if (show) {
-                backdrop.classList.remove("hidden");
-                drawer.classList.remove("-translate-x-full");
-                updateLiveWhatsAppLink();
-            } else {
-                backdrop.classList.add("hidden");
-                drawer.classList.add("-translate-x-full");
-            }
-        }
-
-        function onPaymentMethodChange() {
-            const val = document.querySelector('input[name="checkoutPayment"]:checked').value;
-            document.getElementById("checkout-instapay-box").classList.toggle("hidden", val !== "instapay");
-            updateLiveWhatsAppLink();
-        }
-
-        // بناء نص الطلب وتحديث رابط الواتساب الحي <a>
-        function buildFormattedOrderMessage() {
-            const name = (document.getElementById("order-cust-name").value || "").trim();
-            const phone = (document.getElementById("order-cust-phone").value || "").trim();
-            const address = (document.getElementById("order-cust-address").value || "").trim();
-            const notes = (document.getElementById("order-cust-notes").value || "").trim();
-            const payMethod = document.querySelector('input[name="checkoutPayment"]:checked')?.value || "cash";
-            const total = appCart.reduce((acc, c) => acc + (c.price * c.qty), 0);
-
-            let text = `*طلب جديد - مطعم بابا علي* 🍕🍗\n`;
-            text += `------------------------\n`;
-            text += `👤 *الاسم:* ${name || "غير محدد"}\n`;
-            text += `📱 *الموبايل:* ${phone || "غير محدد"}\n`;
-            text += `📍 *العنوان:* ${address || "غير محدد"}\n`;
-            if (notes) text += `📝 *ملاحظات:* ${notes}\n`;
-            text += `------------------------\n`;
-            text += `*الأصناف المطلوبة:*\n`;
-            appCart.forEach((item, idx) => {
-                text += `${idx + 1}. ${item.name} (${item.size}) × ${item.qty} = *${item.price * item.qty} ج*\n`;
-            });
-            text += `------------------------\n`;
-            text += `💰 *الإجمالي:* ${total} جنيه\n`;
-            if (payMethod === "instapay") {
-                text += `💳 *الدفع:* تحويل إنستاباي على رقم ${appSettings.instaPay} (مرفق صورة التحويل)\n`;
-            } else {
-                text += `💵 *الدفع:* كاش عند الاستلام\n`;
-            }
-            return text;
-        }
-
-        function updateLiveWhatsAppLink() {
-            const linkEl = document.getElementById("wa-checkout-link");
-            if (!linkEl) return;
-            const waIntl = appSettings.whatsapp.replace(/^0/, "20");
-            if (appCart.length === 0) {
-                linkEl.href = `https://wa.me/${waIntl}`;
-                return;
-            }
-            const msg = buildFormattedOrderMessage();
-            linkEl.href = `https://wa.me/${waIntl}?text=${encodeURIComponent(msg)}`;
-        }
-
-        function copyOrderSummaryToClipboard() {
-            if (appCart.length === 0) return;
-            copyTextFallback(buildFormattedOrderMessage(), "تم نسخ تفاصيل الطلب! يمكنك لصقها في واتساب");
-        }
-
-        function onWhatsAppCheckoutClick(e) {
-            if (appCart.length === 0) {
-                e.preventDefault();
-                return false;
-            }
-            const name = document.getElementById("order-cust-name").value.trim();
-            const phone = document.getElementById("order-cust-phone").value.trim();
-            const address = document.getElementById("order-cust-address").value.trim();
-
-            if (!name || !phone || !address) {
-                e.preventDefault();
-                notify("يرجى كتابة الاسم ورقم الموبايل والعنوان أولاً", "error");
-                return false;
-            }
-
-            updateLiveWhatsAppLink();
-
-            const payMethod = document.querySelector('input[name="checkoutPayment"]:checked').value;
-            const total = appCart.reduce((acc, c) => acc + (c.price * c.qty), 0);
-
-            appOrders.unshift({
-                id: "ORD-" + Math.floor(1000 + Math.random() * 9000),
-                customerName: name,
-                phone,
-                address,
-                items: appCart.map(c => ({ name: c.name, size: c.size, qty: c.qty, price: c.price })),
-                total,
-                paymentMethod: payMethod,
-                status: "جديد",
-                createdAt: new Date().toLocaleTimeString("ar-EG", { hour: "2-digit", minute: "2-digit" })
-            });
-
-            setTimeout(() => {
-                appCart = [];
-                persistData();
-                refreshCartUI();
-                toggleCartDrawer(false);
-            }, 400);
-
-            return true;
-        }
-
-        // =====================================================================
-        // لوحة التحكم (Admin Dashboard)
-        // =====================================================================
-        function openAdminLoginModal() {
-            if (isAdminLoggedIn) {
-                switchView("admin");
-                return;
-            }
-            document.getElementById("admin-login-modal").classList.remove("hidden");
-            document.getElementById("admin-pin-input").focus();
-        }
-
-        function closeAdminLoginModal() {
-            document.getElementById("admin-login-modal").classList.add("hidden");
-        }
-
-        function submitAdminPin() {
-            const pin = document.getElementById("admin-pin-input").value;
-            if (pin === "1234") {
-                isAdminLoggedIn = true;
-                closeAdminLoginModal();
-                switchView("admin");
-                notify("تم الدخول إلى لوحة التحكم");
-            } else {
-                notify("رمز المرور غير صحيح (الافتراضي 1234)", "error");
-            }
-        }
-
-        function instantDemoAdminLogin() {
-            isAdminLoggedIn = true;
-            closeAdminLoginModal();
-            switchView("admin");
-            notify("تم الدخول السريع للوحة التحكم");
-        }
-
-        function switchView(view) {
-            const custView = document.getElementById("customer-view");
-            const admView = document.getElementById("admin-view");
-            const menuBtn = document.getElementById("nav-menu-btn");
-            const admBtn = document.getElementById("nav-admin-btn");
-
-            if (view === "admin") {
-                custView.classList.add("hidden");
-                admView.classList.remove("hidden");
-                admBtn.className = "px-2.5 sm:px-4 py-2 rounded-xl text-xs sm:text-sm font-extrabold bg-babaAmber-500 text-babaDark shadow transition flex items-center gap-1.5";
-                menuBtn.className = "px-2.5 sm:px-4 py-2 rounded-xl text-xs sm:text-sm font-extrabold bg-white/15 text-white hover:bg-white/25 transition flex items-center gap-1.5";
-                loadAdminDashboard();
-            } else {
-                admView.classList.add("hidden");
-                custView.classList.remove("hidden");
-                menuBtn.className = "px-2.5 sm:px-4 py-2 rounded-xl text-xs sm:text-sm font-extrabold bg-white text-babaRed-800 shadow transition flex items-center gap-1.5";
-                admBtn.className = "px-2.5 sm:px-4 py-2 rounded-xl text-xs sm:text-sm font-extrabold bg-babaDark/85 hover:bg-babaDark text-amber-300 border border-amber-400/40 shadow transition flex items-center gap-1.5";
-                renderCategoryTabs();
-                renderCustomerMenu();
-            }
-        }
-
-        function loadAdminDashboard() {
-            refreshDashboardStats();
-
-            const catFilter = document.getElementById("adm-category-filter");
-            const newCatSelect = document.getElementById("new-item-cat");
-            catFilter.innerHTML = `<option value="all">جميع الأقسام (${appMenuItems.length})</option>` +
-                MENU_CATEGORIES.map(c => `<option value="${c.id}">${c.name}</option>`).join("");
-            newCatSelect.innerHTML = MENU_CATEGORIES.map(c => `<option value="${c.id}">${c.name}</option>`).join("");
-
-            document.getElementById("set-wa-input").value = appSettings.whatsapp;
-            document.getElementById("set-instapay-input").value = appSettings.instaPay;
-            document.getElementById("set-phones-input").value = appSettings.phones;
-            document.getElementById("set-address-input").value = appSettings.address;
-
-            renderAdminItemsTable();
-            renderAdminOrdersList();
-        }
-
-        function refreshDashboardStats() {
-            document.getElementById("stat-items-total").textContent = appMenuItems.length;
-            document.getElementById("stat-items-available").textContent = appMenuItems.filter(i => i.available !== false).length;
-            document.getElementById("stat-orders-count").textContent = appOrders.length;
-            const rev = appOrders.reduce((sum, o) => sum + o.total, 0);
-            document.getElementById("stat-orders-revenue").textContent = `${rev} ج`;
-        }
-
-        function switchAdminSection(sec) {
-            document.querySelectorAll(".adm-sec").forEach(el => el.classList.add("hidden"));
-            document.getElementById(`adm-sec-${sec}`).classList.remove("hidden");
-
-            document.querySelectorAll(".adm-tab").forEach(btn => {
-                btn.className = "adm-tab px-4 py-2.5 rounded-xl text-xs sm:text-sm font-extrabold bg-white text-stone-700 border border-stone-200";
-            });
-            document.getElementById(`adm-tab-${sec}`).className = "adm-tab px-4 py-2.5 rounded-xl text-xs sm:text-sm font-extrabold bg-babaAmber-600 text-white shadow";
-        }
-
-        function renderAdminItemsTable() {
-            const catVal = document.getElementById("adm-category-filter").value;
-            const q = document.getElementById("adm-item-search").value.trim().toLowerCase();
-            const tbody = document.getElementById("adm-items-tbody");
-
-            let items = appMenuItems;
-            if (catVal !== "all") items = items.filter(i => i.category === catVal);
-            if (q) items = items.filter(i => i.name.toLowerCase().includes(q));
-
-            tbody.innerHTML = items.map(item => {
-                const cat = MENU_CATEGORIES.find(c => c.id === item.category);
-                const isAvail = item.available !== false;
-                return `
-                    <tr class="hover:bg-stone-50">
-                        <td class="p-3">
-                            <div class="font-extrabold text-stone-900">${item.name}</div>
-                            <div class="text-xs text-stone-400">${item.desc || ''}</div>
-                        </td>
-                        <td class="p-3 text-xs font-bold text-stone-600">${cat ? cat.name : ''}</td>
-                        <td class="p-3">
-                            <div class="flex flex-wrap gap-1.5">
-                                ${item.prices.map((p, idx) => `
-                                    <label class="inline-flex items-center gap-1 bg-amber-50 border border-amber-200 px-2 py-1 rounded-lg text-xs">
-                                        <span class="font-bold text-stone-700">${p.label}:</span>
-                                        <input type="number" value="${p.price}" onchange="updateItemInlinePrice('${item.id}', ${idx}, this.value)" class="w-14 bg-white border border-stone-300 rounded px-1.5 py-0.5 font-black text-babaRed-700 text-center">
-                                    </label>
-                                `).join("")}
-                            </div>
-                        </td>
-                        <td class="p-3 text-center">
-                            <button onclick="toggleAdminItemAvail('${item.id}')" class="px-3 py-1 rounded-full text-xs font-extrabold ${isAvail ? 'bg-emerald-100 text-emerald-800' : 'bg-red-100 text-babaRed-800'}">
-                                ${isAvail ? 'متاح' : 'غير متاح'}
-                            </button>
-                        </td>
-                        <td class="p-3 text-center">
-                            <button onclick="removeMenuItem('${item.id}')" class="text-babaRed-700 hover:bg-red-50 p-2 rounded-lg">
-                                <i class="fa-solid fa-trash"></i>
-                            </button>
-                        </td>
-                    </tr>
-                `;
-            }).join("");
-        }
-
-        function updateItemInlinePrice(itemId, priceIdx, newVal) {
-            const item = appMenuItems.find(i => i.id === itemId);
-            const parsed = parseFloat(newVal);
-            if (!item || isNaN(parsed) || parsed <= 0) return;
-            item.prices[priceIdx].price = parsed;
-            persistData();
-            notify(`تم تحديث سعر "${item.name}" إلى ${parsed} ج`);
-        }
-
-        function toggleAdminItemAvail(itemId) {
-            const item = appMenuItems.find(i => i.id === itemId);
-            if (!item) return;
-            item.available = item.available === false ? true : false;
-            persistData();
-            renderAdminItemsTable();
-            refreshDashboardStats();
-            notify(`تم تغيير حالة "${item.name}"`);
-        }
-
-        function removeMenuItem(itemId) {
-            appMenuItems = appMenuItems.filter(i => i.id !== itemId);
-            persistData();
-            renderAdminItemsTable();
-            refreshDashboardStats();
-            notify("تم حذف الصنف");
-        }
-
-        function toggleNewPriceMode() {
-            const mode = document.querySelector('input[name="newPriceMode"]:checked').value;
-            document.getElementById("new-single-price-box").classList.toggle("hidden", mode !== "single");
-            document.getElementById("new-dual-price-box").classList.toggle("hidden", mode !== "dual");
-        }
-
-        function handleAddNewMenuItem(e) {
-            e.preventDefault();
-            const name = document.getElementById("new-item-name").value.trim();
-            const category = document.getElementById("new-item-cat").value;
-            const desc = document.getElementById("new-item-desc").value.trim();
-            const mode = document.querySelector('input[name="newPriceMode"]:checked').value;
-
-            let prices = [];
-            if (mode === "single") {
-                const lbl = document.getElementById("new-s-label").value.trim() || "عادي";
-                const prc = parseFloat(document.getElementById("new-s-price").value);
-                if (!prc || prc <= 0) {
-                    notify("يرجى إدخال سعر صحيح", "error");
-                    return;
-                }
-                prices.push({ label: lbl, price: prc });
-            } else {
-                const l1 = document.getElementById("new-d1-label").value.trim() || "وسط";
-                const p1 = parseFloat(document.getElementById("new-d1-price").value);
-                const l2 = document.getElementById("new-d2-label").value.trim() || "كبير";
-                const p2 = parseFloat(document.getElementById("new-d2-price").value);
-                if (!p1 || !p2) {
-                    notify("يرجى إدخال أسعار الحجمين", "error");
-                    return;
-                }
-                prices.push({ label: l1, price: p1 }, { label: l2, price: p2 });
-            }
-
-            appMenuItems.unshift({
-                id: "item_" + Date.now(),
-                category,
-                name,
-                desc,
-                prices,
-                available: true
-            });
-
-            persistData();
-            e.target.reset();
-            toggleNewPriceMode();
-            refreshDashboardStats();
-            renderAdminItemsTable();
-            switchAdminSection("items");
-            notify(`تمت إضافة "${name}" بنجاح`);
-        }
-
-        function renderAdminOrdersList() {
-            const container = document.getElementById("adm-orders-container");
-            if (appOrders.length === 0) {
-                container.innerHTML = `<p class="text-center text-stone-400 py-8 text-sm">لا توجد طلبات مسجلة حتى الآن</p>`;
-                return;
-            }
-            container.innerHTML = appOrders.map(ord => `
-                <div class="border border-stone-200 rounded-xl p-4 bg-stone-50 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-                    <div class="space-y-1">
-                        <div class="flex flex-wrap items-center gap-2">
-                            <span class="font-black text-babaRed-700">${ord.id}</span>
-                            <span class="font-extrabold text-stone-900">${ord.customerName}</span>
-                            <span class="text-xs text-stone-500" dir="ltr">(${ord.phone})</span>
-                            <span class="text-[11px] px-2 py-0.5 rounded font-bold ${ord.paymentMethod === 'instapay' ? 'bg-purple-100 text-purple-800' : 'bg-stone-200 text-stone-700'}">
-                                ${ord.paymentMethod === 'instapay' ? 'إنستاباي' : 'كاش'}
-                            </span>
-                        </div>
-                        <p class="text-xs text-stone-600">${ord.address}</p>
-                        <p class="text-xs font-bold text-stone-800">${ord.items.map(i => `${i.name} (${i.size}) ×${i.qty}`).join(" ، ")}</p>
-                    </div>
-                    <div class="flex items-center justify-between sm:justify-end gap-3 border-t sm:border-t-0 pt-2 sm:pt-0">
-                        <span class="font-black text-base text-stone-900">${ord.total} ج</span>
-                        <select onchange="updateOrderStatus('${ord.id}', this.value)" class="bg-white border border-stone-300 rounded-lg px-2.5 py-1.5 text-xs font-bold">
-                            <option value="جديد" ${ord.status === 'جديد' ? 'selected' : ''}>جديد</option>
-                            <option value="جاري التحضير" ${ord.status === 'جاري التحضير' ? 'selected' : ''}>جاري التحضير</option>
-                            <option value="تم التوصيل" ${ord.status === 'تم التوصيل' ? 'selected' : ''}>تم التوصيل</option>
-                        </select>
-                    </div>
-                </div>
-            `).join("");
-        }
-
-        function updateOrderStatus(orderId, status) {
-            const ord = appOrders.find(o => o.id === orderId);
-            if (!ord) return;
-            ord.status = status;
-            persistData();
-            notify(`تم تحديث حالة الطلب ${orderId}`);
-        }
-
-        function clearOrdersLog() {
-            appOrders = [];
-            persistData();
-            renderAdminOrdersList();
-            refreshDashboardStats();
-            notify("تم مسح سجل الطلبات");
-        }
-
-        function handleSaveSettings(e) {
-            e.preventDefault();
-            appSettings.whatsapp = document.getElementById("set-wa-input").value.trim();
-            appSettings.instaPay = document.getElementById("set-instapay-input").value.trim();
-            appSettings.phones = document.getElementById("set-phones-input").value.trim();
-            appSettings.address = document.getElementById("set-address-input").value.trim();
-            persistData();
-            syncSettingsUI();
-            notify("تم حفظ إعدادات المطعم");
-        }
-
-        function resetAllDataToDefault() {
-            appSettings = { ...INITIAL_SETTINGS };
-            appMenuItems = JSON.parse(JSON.stringify(INITIAL_MENU_ITEMS));
-            persistData();
-            syncSettingsUI();
-            loadAdminDashboard();
-            notify("تمت استعادة المنيو والأسعار الأصلية بالكامل");
-        }
-
-        // تشغيل التطبيق عند اكتمال تحميل الصفحة
-        window.onload = function() {
-            syncSettingsUI();
-            renderCategoryTabs();
-            renderCustomerMenu();
-            refreshCartUI();
-        };
-    </script>
-</body>
-</html>
+            { id: "pz_1", category: "cat-pizza", name: "مارجريتا", desc: "صلصة البيتزا وجبنة موزاريلا طبيعي", image: ITEM_PHOTOS.pizzaMargherita, prices: [{ label: "وسط", price: 105 }, { label: "كبير", price: 145 }], available: true },
+            { id: "pz_2", category: "cat-pizza", name: "مشروم", desc: "بيتزا بالمشروم الطازج والموزاريلا", image: ITEM_PHOTOS.pizzaMargherita, prices: [{ label: "وسط", price: 130 }, { label: "كبير", price: 180 }], available: true },
+            { id: "pz_3", category: "cat-pizza", name: "سدق", desc: "بيتزا بالسدق الشرقي المتبل", image: ITEM_PHOTOS.pizzaPepperoni, prices: [{ label: "وسط", price: 140 }, { label: "كبير", price: 190 }], available: true },
+            { id: "pz_4", category: "cat-pizza", name: "لحم مفروم", desc: "بيتزا باللحم المفروم والموزاريلا", image: ITEM_PHOTOS.pizzaPepperoni, prices: [{ label: "وسط", price: 140 }, { label: "كبير", price: 190 }], available: true },
+            { id: "pz_5", category: "cat-pizza", name: "
